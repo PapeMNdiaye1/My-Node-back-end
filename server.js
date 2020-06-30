@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 // ############################
 const sudscribersRouter = require("./router/UsersRouter");
-app.use("/signup", sudscribersRouter);
+app.use("/", sudscribersRouter);
 
 // ############################
 

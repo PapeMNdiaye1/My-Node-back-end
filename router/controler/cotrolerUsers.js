@@ -1,17 +1,26 @@
 const Users = require("../../Models/UserModel");
 
-exports.nimp = async (req, res) => {
+exports.signUp = async (req, res) => {
   console.log(req.body);
-
   let user = await new Users({
     username: req.body.Name,
     email: req.body.Email,
     password: req.body.Password,
   });
-  user
-    .save()
-    .then(console.log("ok"))
-    .catch((error) => res.status(400).json({ error: "N1" }));
+  try {
+    let newUser = await user.save();
+    console.log("USER CREATED");
+    res.status(201).send({ UserLogin: true });
+  } catch (err) {
+    if (err.code == 11000) {
+      console.log("Duplicata Email");
+      res.status(403).send({ UserLogin: "Email Olredy Existed" });
+    }
+  }
+};
 
-  res.json({ mes: "eeeeeeee" });
+exports.getUserInfos = (req, res) => {
+  Users.findOne({ email: req.params.UserEmail }).then(function (result) {
+    res.status(201).send({ User: result });
+  });
 };
