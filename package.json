@@ -16,8 +16,11 @@
     "nodemon": "^1.14.6"
   },
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "concurrently": "^3.5.1",
     "express": "^4.16.2",
-    "mongoose": "^5.9.20"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.20",
+    "mongoose-unique-validator": "^2.0.3"
   }
 }

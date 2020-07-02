@@ -1,5 +1,12 @@
 const mongoose = require("mongoose");
-// const uniqueValidator = require("mongoose-unique-validator");
+const uniqueValidator = require("mongoose-unique-validator");
+
+const postIdSchema = new mongoose.Schema({
+  onePostId: {
+    type: String,
+    required: true,
+  },
+});
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -20,8 +27,12 @@ const userSchema = new mongoose.Schema({
     required: false,
     default: "http://localhost:3333/assets/style/images/profile2.jpg",
   },
+  posts: {
+    type: [postIdSchema],
+    required: false,
+  },
 });
 
-// userSchema.plugin(uniqueValidator);
+userSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model("Users", userSchema);
