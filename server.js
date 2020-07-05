@@ -20,8 +20,10 @@ app.use("/assets", express.static("assets"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 // ############################
-const sudscribersRouter = require("./router/UsersRouter");
+const sudscribersRouter = require("./router/UsersRouters");
 app.use("/User", sudscribersRouter);
+const PostsRouter = require("./router/PostsRouters");
+app.use("/Post", PostsRouter);
 
 // ############################
 

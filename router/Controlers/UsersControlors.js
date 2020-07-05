@@ -1,5 +1,4 @@
 const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
 const Users = require("../../Models/UserModel");
 
 // #############################
@@ -12,6 +11,7 @@ exports.signUp = (req, res) => {
         username: req.body.Name,
         email: req.body.Email,
         password: hash,
+        profilepictur: req.body.ProfilePictur,
       });
       console.log(user);
       user
@@ -56,7 +56,6 @@ exports.login = (req, res) => {
     })
     .catch((error) => res.status(500).json({ error }));
 };
-
 // ###############################
 // GET SING UP USER INFOS
 exports.getUserInfos = (req, res) => {
@@ -66,4 +65,24 @@ exports.getUserInfos = (req, res) => {
     .then(function (result) {
       res.status(201).send({ User: result });
     });
+};
+// ################################
+// Updat User Posts
+exports.AddNewPost = (req, res) => {
+  // console.log(req.params.id);
+  console.log(req.body);
+
+  var PostId = { onePostId: req.body.PostId };
+  Users.findOneAndUpdate(
+    { _id: req.body.UserId },
+    { $push: { posts: PostId } },
+    function (error, success) {
+      if (error) {
+        console.log(error);
+        res.status(400).send({ error });
+      } else {
+        res.status(201).send({ postsCreated: true });
+      }
+    }
+  );
 };
