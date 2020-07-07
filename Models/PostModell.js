@@ -1,23 +1,18 @@
 const mongoose = require("mongoose");
 
-let dt = new Date();
-let postDate = `${(dt.getMonth() + 1)
-  .toString()
-  .padStart(2, "0")}/${dt
-  .getDate()
-  .toString()
-  .padStart(2, "0")}/${dt
-  .getFullYear()
-  .toString()
-  .padStart(4, "0")} ${dt
-  .getHours()
-  .toString()
-  .padStart(2, "0")}:${dt.getMinutes().toString().padStart(2, "0")}`;
-
+// ##########################################################
 const responseSchema = new mongoose.Schema({
   authorId: {
     type: String,
     required: true,
+  },
+  responseAuthorName: {
+    type: String,
+    required: true,
+  },
+  responseAuthorPictur: {
+    type: String,
+    required: false,
   },
   response: {
     type: String,
@@ -25,16 +20,30 @@ const responseSchema = new mongoose.Schema({
   },
   responseDate: {
     type: String,
-    required: false,
-    default: postDate,
+    required: true,
   },
 });
-
+// ##########################################################
 const postSchema = new mongoose.Schema({
   postImage: {
     type: String,
     required: false,
-    default: "http://localhost:3333/assets/style/images/profile2.jpg",
+  },
+  postImageId: {
+    type: String,
+    required: false,
+  },
+  postAuthorId: {
+    type: String,
+    required: true,
+  },
+  postAuthorPictur: {
+    type: String,
+    required: false,
+  },
+  postAuthorName: {
+    type: String,
+    required: true,
   },
   postTitle: {
     type: String,
@@ -44,10 +53,14 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  nofLikes: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
   postDate: {
     type: String,
     required: true,
-    default: postDate,
   },
   postResponses: {
     type: [responseSchema],

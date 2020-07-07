@@ -3,19 +3,15 @@ const router = express.Router();
 const UserCtrl = require("./Controlers/UsersControlors");
 
 // ############################################
-// User Signup
 router.post("/signup", UserCtrl.signUp);
-
 // ############################################
-// User Login
 router.post("/login", UserCtrl.login);
-
 // ############################################
-// Get User In infos
 router.get("/get-user-infons/:UserEmail", UserCtrl.getUserInfos);
+// ############################################
+router.get("/get-user-profile/:id", UserCtrl.getUserProfile);
+// ############################################
+router.delete("/delete-one-user/:id", UserCtrl.deleteUser);
+// ############################################
 
-// ##################################################
-// Add New Post
-router.post("/add-new-post", UserCtrl.AddNewPost);
-// ################################
 module.exports = router;

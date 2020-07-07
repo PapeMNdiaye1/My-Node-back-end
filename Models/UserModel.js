@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
-const postIdSchema = new mongoose.Schema({
-  onePostId: {
+const likedPost = new mongoose.Schema({
+  _id: {
     type: String,
     required: true,
   },
@@ -25,11 +25,10 @@ const userSchema = new mongoose.Schema({
   profilepictur: {
     type: String,
     required: false,
-    default: "http://localhost:3333/assets/style/images/profile2.jpg",
   },
-  posts: {
-    type: [postIdSchema],
-    required: false,
+  allLikedPosts: {
+    type: [likedPost],
+    require: false,
   },
 });
 

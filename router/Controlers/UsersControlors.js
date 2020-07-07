@@ -1,8 +1,7 @@
 const bcrypt = require("bcrypt");
 const Users = require("../../Models/UserModel");
 
-// #############################
-// CREAT USER
+// ######################################################################################
 exports.signUp = (req, res) => {
   bcrypt
     .hash(req.body.Password, 10)
@@ -13,7 +12,6 @@ exports.signUp = (req, res) => {
         password: hash,
         profilepictur: req.body.ProfilePictur,
       });
-      console.log(user);
       user
         .save()
         .then(() => {
@@ -32,13 +30,12 @@ exports.signUp = (req, res) => {
     })
     .catch((error) => res.status(500).send({ error }));
 };
-// ############################################
-// User Login
+// #######################################################################################
 exports.login = (req, res) => {
   Users.findOne({ email: req.body.Email })
     .then((user) => {
       if (!user) {
-        return res.status(401).json({ error: "Utilisateur non trouvé !" });
+        return res.status(401).json({ error: "User not fund !" });
       }
       bcrypt
         .compare(req.body.Password, user.password)
@@ -56,33 +53,34 @@ exports.login = (req, res) => {
     })
     .catch((error) => res.status(500).json({ error }));
 };
-// ###############################
-// GET SING UP USER INFOS
+// ######################################################################################
 exports.getUserInfos = (req, res) => {
   Users.findOne({ email: req.params.UserEmail })
-    .select("_id username email profilepictur")
-    .exec()
+    .select("_id username email profilepictur allLikedPosts")
     .then(function (result) {
       res.status(201).send({ User: result });
     });
 };
-// ################################
-// Updat User Posts
-exports.AddNewPost = (req, res) => {
-  // console.log(req.params.id);
-  console.log(req.body);
-
-  var PostId = { onePostId: req.body.PostId };
-  Users.findOneAndUpdate(
-    { _id: req.body.UserId },
-    { $push: { posts: PostId } },
-    function (error, success) {
-      if (error) {
-        console.log(error);
-        res.status(400).send({ error });
+// ######################################################################################
+exports.getUserProfile = (req, res) => {
+  Users.findOne({ _id: req.params.id })
+    .select("username email profilepictur allLikedPosts")
+    .then(function (result) {
+      res.status(201).send({ User: result });
+    });
+};
+// ##############################################################################
+exports.deleteUser = (req, res) => {
+  try {
+    Users.deleteOne({ _id: req.params.id }, (err) => {
+      if (err) {
+        console.log(err);
       } else {
-        res.status(201).send({ postsCreated: true });
+        console.log("Users Deleted");
+        res.status(201).json({ message: true });
       }
-    }
-  );
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
