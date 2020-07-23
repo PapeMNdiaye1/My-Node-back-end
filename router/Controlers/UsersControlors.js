@@ -32,16 +32,19 @@ exports.signUp = (req, res) => {
 };
 // #######################################################################################
 exports.login = (req, res) => {
+  // console.log(req.body.Email);
   Users.findOne({ email: req.body.Email })
     .then((user) => {
       if (!user) {
-        return res.status(401).json({ error: "User not fund !" });
+        return res.status(401).json({ UserLogin: false });
       }
       bcrypt
         .compare(req.body.Password, user.password)
         .then((valid) => {
           if (!valid) {
-            return res.status(401).send({ error: "Mot de passe incorrect !" });
+            return res
+              .status(401)
+              .send({ UserLogin: "Mot de passe incorrect !" });
           }
           res.status(200).send({
             UserLogin: true,
@@ -49,9 +52,9 @@ exports.login = (req, res) => {
             token: "TOKEN",
           });
         })
-        .catch((error) => res.status(500).json({ error }));
+        .catch((error) => res.status(500).json({ UserLogin: false }));
     })
-    .catch((error) => res.status(500).json({ error }));
+    .catch((error) => res.status(500).json({ UserLogin: false }));
 };
 // ######################################################################################
 exports.getUserInfos = (req, res) => {
@@ -59,14 +62,21 @@ exports.getUserInfos = (req, res) => {
     .select("_id username email profilepictur allLikedPosts")
     .then(function (result) {
       res.status(201).send({ User: result });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(404).send({ User: false });
     });
 };
 // ######################################################################################
 exports.getUserProfile = (req, res) => {
   Users.findOne({ _id: req.params.id })
     .select("username email profilepictur allLikedPosts")
-    .then(function (result) {
+    .then((result) => {
       res.status(201).send({ User: result });
+    })
+    .catch((err) => {
+      console.log(err);
     });
 };
 // ##############################################################################
@@ -83,4 +93,28 @@ exports.deleteUser = (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+};
+// ##############################################################################
+exports.getAllLikedPosts = (req, res) => {
+  Users.findOne({ _id: req.params.id })
+    .select("allLikedPosts")
+    .then((allLikedPosts) => {
+      res.status(201).json({ response: allLikedPosts });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(404).json({ response: false });
+    });
+};
+// ##############################################################################
+exports.getAllUsers = (req, res) => {
+  Users.find()
+    .select("_id username profilepictur")
+    .then(function (result) {
+      res.status(201).send({ User: result });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(404).send({ User: false });
+    });
 };

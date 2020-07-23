@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 
 const likedPost = new mongoose.Schema({
-  _id: {
+  postId: {
     type: String,
     required: true,
   },

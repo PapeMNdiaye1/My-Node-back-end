@@ -30,7 +30,7 @@ exports.getLastPost = (req, res) => {
     .sort({ postDate: -1 })
     .limit(5)
     .select(
-      "_id postTitle nofLikes postDescription postImage postImageId postAuthorId postAuthorPictur postAuthorPictur postAuthorName postDate"
+      "_id postTitle nofLikes postDescription postImage postImageId postAuthorId postAuthorPictur postAuthorPictur postAuthorName postDate postResponses.length"
     )
     .then((allposts) => {
       if (allposts) {
@@ -51,9 +51,8 @@ exports.getSomePost = (req, res) => {
     .skip(Number(req.params.id))
     .limit(2)
     .select(
-      "_id postTitle nofLikes postDescription postImage postImageId postAuthorId postAuthorPictur postAuthorPictur postAuthorName postDate"
+      "_id postTitle nofLikes postDescription postImage postImageId postAuthorId postAuthorPictur postAuthorPictur postAuthorName postDate postResponses.length"
     )
-    // .exec()
     .then((allposts) => {
       if (allposts) {
         console.log("GET SOME POST");
@@ -70,7 +69,7 @@ exports.getSomePost = (req, res) => {
 exports.getAllMyPost = (req, res) => {
   Posts.find({ postAuthorId: req.params.id })
     .select(
-      "_id postTitle nofLikes postDescription postImage postImageId postAuthorId postAuthorPictur postAuthorPictur postAuthorName postDate postResponses"
+      "_id postTitle nofLikes postDescription postImage postImageId postAuthorId postAuthorPictur postAuthorPictur postAuthorName postDate postResponses.length"
     )
     .then((allposts) => {
       if (allposts) {
@@ -155,7 +154,7 @@ exports.getAllResponsesOfOnePost = (req, res) => {
 // ##############################################################################
 exports.likeAndDislike = async (req, res) => {
   let likedpost = {
-    _id: req.params.id,
+    postId: req.params.id,
   };
   if (req.body.operation === "like") {
     Posts.findOneAndUpdate(
@@ -196,4 +195,40 @@ exports.likeAndDislike = async (req, res) => {
       )
     );
   }
+};
+// ##############################################################################
+exports.deletResponse = (req, res) => {
+  Posts.findOneAndUpdate(
+    { _id: req.params.id },
+    { $pull: { postResponses: { _id: req.body.id } } },
+    (error, success) => {
+      if (error) {
+        console.log(error);
+        res.status(400).json({ response: false });
+      } else {
+        console.log("Response - Deleted");
+        res.status(201).json({ response: true });
+      }
+    }
+  );
+};
+// #############################################################################
+exports.modifyPost = (req, res) => {
+  console.log(req.params.id);
+  Posts.findOneAndUpdate(
+    { _id: req.params.id },
+    { postTitle: req.body.PostTitle, postDescription: req.body.PostDescription }
+  )
+    .then((response) => {
+      if (response) {
+        console.log("Post Modify");
+        res.status(200).json({ response: true });
+      } else {
+        res.status(404).json({ response: "db is empty" });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send({ messages: err.message });
+    });
 };

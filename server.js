@@ -10,7 +10,6 @@ const app = express();
 
 // ############################
 app.use(express.urlencoded({ extended: false }));
-// app.use(bodyParser.json());
 app.use(express.json());
 // ###################################################
 //                 ? MONGODB
@@ -26,7 +25,6 @@ conn.on("error", (error) => {
 });
 // Init gfs
 let gfs;
-
 conn.once("open", () => {
   console.log("db Conected");
   gfs = Grid(conn.db, mongoose.mongo);
