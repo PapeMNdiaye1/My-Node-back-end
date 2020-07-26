@@ -57,6 +57,8 @@ const sudscribersRouter = require("./router/UsersRouters");
 app.use("/User", sudscribersRouter);
 const PostsRouter = require("./router/PostsRouters");
 app.use("/Post", PostsRouter);
+const FollowRouter = require("./router/FrindesRouters");
+app.use("/Follow", FollowRouter);
 
 // ?#####################################################################################
 // @route POST /upload

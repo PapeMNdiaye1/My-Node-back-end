@@ -15,6 +15,8 @@ router.delete("/delete-one-user/:id", UserCtrl.deleteUser);
 // ############################################
 router.get("/get-all-liked-posts/:id", UserCtrl.getAllLikedPosts);
 // ############################################
-router.get("/get-all-users", UserCtrl.getAllUsers);
+router.get("/get-last-users", UserCtrl.getLastUsers);
+// ############################################
+router.get("/get-some-users/:id", UserCtrl.getSaomeUsers);
 
 module.exports = router;

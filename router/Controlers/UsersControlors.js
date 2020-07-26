@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const Users = require("../../Models/UserModel");
+const FrindesContainer = require("../../Models/FrindeModel");
 
 // ######################################################################################
 exports.signUp = (req, res) => {
@@ -15,20 +16,31 @@ exports.signUp = (req, res) => {
       user
         .save()
         .then(() => {
-          console.log("User Created");
-          res.status(201).send({ UserLogin: true });
+          console.log(user._id);
+          const frindesContainer = new FrindesContainer({
+            userId: user._id,
+          });
+          frindesContainer
+            .save()
+            .then(() => {
+              console.log("User Created");
+              res.status(201).json({ UserLogin: true });
+            })
+            .catch((error) => {
+              console.log(error);
+              res.status(400).json({ error });
+            });
         })
         .catch((error) => {
           if (error.errors.email.path == "email") {
-            console.log("Duplicata Email");
-            res.status(403).send({ UserLogin: "Email Olredy Existed" });
+            res.status(403).json({ UserLogin: "Email Olredy Existed" });
           } else {
             console.log(error);
-            res.status(400).send({ error });
+            res.status(400).json({ error });
           }
         });
     })
-    .catch((error) => res.status(500).send({ error }));
+    .catch((error) => res.status(500).json({ error }));
 };
 // #######################################################################################
 exports.login = (req, res) => {
@@ -79,7 +91,7 @@ exports.getUserProfile = (req, res) => {
       console.log(err);
     });
 };
-// ##############################################################################
+// ###############################################################################
 exports.deleteUser = (req, res) => {
   try {
     Users.deleteOne({ _id: req.params.id }, (err) => {
@@ -94,7 +106,7 @@ exports.deleteUser = (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-// ##############################################################################
+// ###############################################################################
 exports.getAllLikedPosts = (req, res) => {
   Users.findOne({ _id: req.params.id })
     .select("allLikedPosts")
@@ -106,15 +118,37 @@ exports.getAllLikedPosts = (req, res) => {
       res.status(404).json({ response: false });
     });
 };
-// ##############################################################################
-exports.getAllUsers = (req, res) => {
+// ###############################################################################
+exports.getLastUsers = (req, res) => {
   Users.find()
-    .select("_id username profilepictur")
+    .sort({ _id: -1 })
+    .limit(5)
+    .select("_id username profilepictur email")
     .then(function (result) {
-      res.status(201).send({ User: result });
+      res.status(201).json({ User: result });
     })
     .catch((error) => {
       console.log(error);
-      res.status(404).send({ User: false });
+      res.status(404).json({ User: false });
+    });
+};
+// ###############################################################################
+exports.getSaomeUsers = (req, res) => {
+  console.log(req.params.id);
+  Users.find()
+    .sort({ _id: -1 })
+    .skip(Number(req.params.id))
+    .limit(5)
+    .select("_id username profilepictur email")
+    .then((result) => {
+      if (result) {
+        console.log("GET SOME User");
+        res.status(200).json({ User: result });
+      } else {
+        res.status(404).json({ User: "db is empty" });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ User: err.message });
     });
 };
