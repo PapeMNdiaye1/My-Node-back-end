@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const Users = require("../../Models/UserModel");
-const FrindesContainer = require("../../Models/FrindeModel");
+const FriendsContainer = require("../../Models/FriendModel");
 
 // ######################################################################################
 exports.signUp = (req, res) => {
@@ -11,16 +11,16 @@ exports.signUp = (req, res) => {
         username: req.body.Name,
         email: req.body.Email,
         password: hash,
-        profilepictur: req.body.ProfilePictur,
+        profilePicture: req.body.ProfilePicture,
       });
       user
         .save()
         .then(() => {
           console.log(user._id);
-          const frindesContainer = new FrindesContainer({
+          const friendsContainer = new FriendsContainer({
             userId: user._id,
           });
-          frindesContainer
+          friendsContainer
             .save()
             .then(() => {
               console.log("User Created");
@@ -32,7 +32,7 @@ exports.signUp = (req, res) => {
             });
         })
         .catch((error) => {
-          if (error.errors.email.path == "email") {
+          if (error.errors.email.path || error.errors.email.path == "email") {
             res.status(403).json({ UserLogin: "Email Olredy Existed" });
           } else {
             console.log(error);
@@ -71,7 +71,7 @@ exports.login = (req, res) => {
 // ######################################################################################
 exports.getUserInfos = (req, res) => {
   Users.findOne({ email: req.params.UserEmail })
-    .select("_id username email profilepictur allLikedPosts")
+    .select("_id username email profilePicture allLikedPosts")
     .then(function (result) {
       res.status(201).send({ User: result });
     })
@@ -83,7 +83,7 @@ exports.getUserInfos = (req, res) => {
 // ######################################################################################
 exports.getUserProfile = (req, res) => {
   Users.findOne({ _id: req.params.id })
-    .select("username email profilepictur allLikedPosts")
+    .select("username email profilePicture allLikedPosts")
     .then((result) => {
       res.status(201).send({ User: result });
     })
@@ -123,7 +123,7 @@ exports.getLastUsers = (req, res) => {
   Users.find()
     .sort({ _id: -1 })
     .limit(5)
-    .select("_id username profilepictur email")
+    .select("_id username profilePicture email")
     .then(function (result) {
       res.status(201).json({ User: result });
     })
@@ -139,7 +139,7 @@ exports.getSaomeUsers = (req, res) => {
     .sort({ _id: -1 })
     .skip(Number(req.params.id))
     .limit(5)
-    .select("_id username profilepictur email")
+    .select("_id username profilePicture email")
     .then((result) => {
       if (result) {
         console.log("GET SOME User");

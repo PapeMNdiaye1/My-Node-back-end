@@ -57,7 +57,7 @@ const sudscribersRouter = require("./router/UsersRouters");
 app.use("/User", sudscribersRouter);
 const PostsRouter = require("./router/PostsRouters");
 app.use("/Post", PostsRouter);
-const FollowRouter = require("./router/FrindesRouters");
+const FollowRouter = require("./router/FriendsRouters");
 app.use("/Follow", FollowRouter);
 
 // ?#####################################################################################
@@ -103,7 +103,7 @@ app.delete("/files/:id", (req, res) => {
     if (err) {
       return res.status(404).json({ err: err });
     } else {
-      console.log("pictur Deleted");
+      console.log("picture Deleted");
       return res.status(201).json({ message: true });
     }
   });

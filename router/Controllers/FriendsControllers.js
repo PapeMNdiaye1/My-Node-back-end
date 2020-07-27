@@ -1,29 +1,40 @@
 // const Users = require("../../Models/UserModel");
-const FrindesContainer = require("../../Models/FrindeModel");
+const FriendsContainer = require("../../Models/FriendModel");
 
-exports.getAllFrindes = async (req, res) => {
-  console.log(req.params.id);
-  FrindesContainer.findOne({ userId: req.params.id })
-    .select("frindes")
+exports.getAllFriends = async (req, res) => {
+  FriendsContainer.findOne({ userId: req.params.id })
+    .select("friends")
     .then(function (result) {
-      res.status(201).json({ allFrindesId: result });
+      res.status(201).json({ allFriendsId: result });
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json({ allFrindesId: "No Frinde" });
+      res.status(500).json({ allFriendsId: "No Friend" });
+    });
+};
+// ############################################################
+exports.getAllFriendsAndFollowers = async (req, res) => {
+  FriendsContainer.findOne({ userId: req.params.id })
+    .select("friends followers")
+    .then(function (result) {
+      res.status(201).json({ allFriendsId: result });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ allFriendsId: "No Friend" });
     });
 };
 // ############################################################
 exports.follow = async (req, res) => {
-  var frinde = await {
-    frindeId: req.body.Id,
-    frindeName: req.body.FrindeName,
-    frindeEmail: req.body.FrindeEmail,
-    frindeProfilepictur: req.body.FrindeProfilepictur,
+  var friend = await {
+    friendId: req.body.Id,
+    friendName: req.body.FriendName,
+    friendEmail: req.body.FriendEmail,
+    friendProfilePicture: req.body.friendProfilePicture,
   };
-  FrindesContainer.findOneAndUpdate(
+  FriendsContainer.findOneAndUpdate(
     { userId: req.params.id },
-    { $push: { frindes: frinde } },
+    { $push: { friends: friend } },
     (error, success) => {
       if (error) {
         console.log(error);
@@ -37,15 +48,15 @@ exports.follow = async (req, res) => {
 };
 // ############################################################
 exports.unFollow = (req, res) => {
-  FrindesContainer.findOneAndUpdate(
+  FriendsContainer.findOneAndUpdate(
     { userId: req.params.id },
-    { $pull: { frindes: { frindeId: req.body.Id } } },
+    { $pull: { friends: { friendId: req.body.Id } } },
     (error, success) => {
       if (error) {
         console.log(error);
         res.status(400).json({ response: false });
       } else {
-        console.log("Unfollow");
+        console.log("UnFollow");
         res.status(201).json({ response: true });
       }
     }
@@ -54,12 +65,12 @@ exports.unFollow = (req, res) => {
 // ###########################################################
 exports.addFollower = async (req, res) => {
   var follower = await {
-    frindeId: req.body.Id,
-    frindeName: req.body.FrindeName,
-    frindeEmail: req.body.FrindeEmail,
-    frindeProfilepictur: req.body.FrindeProfilepictur,
+    friendId: req.body.Id,
+    friendName: req.body.FriendName,
+    friendEmail: req.body.FriendEmail,
+    friendProfilePicture: req.body.friendProfilePicture,
   };
-  FrindesContainer.findOneAndUpdate(
+  FriendsContainer.findOneAndUpdate(
     { userId: req.params.id },
     { $push: { followers: follower } },
     (error, success) => {
@@ -74,11 +85,10 @@ exports.addFollower = async (req, res) => {
   );
 };
 // ###########################################################
-
 exports.removeFollower = (req, res) => {
-  FrindesContainer.findOneAndUpdate(
+  FriendsContainer.findOneAndUpdate(
     { userId: req.params.id },
-    { $pull: { followers: { frindeId: req.body.Id } } },
+    { $pull: { followers: { friendId: req.body.Id } } },
     (error, success) => {
       if (error) {
         console.log(error);

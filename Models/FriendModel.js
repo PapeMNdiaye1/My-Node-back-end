@@ -1,36 +1,36 @@
 const mongoose = require("mongoose");
 
 // ##########################################################
-const frindesSchema = new mongoose.Schema({
-  frindeId: {
+const friendsSchema = new mongoose.Schema({
+  friendId: {
     type: String,
     required: true,
   },
-  frindeName: {
+  friendName: {
     type: String,
     required: true,
   },
-  frindeEmail: {
+  friendEmail: {
     type: String,
     required: true,
   },
-  frindeProfilepictur: {
+  friendProfilePicture: {
     type: String,
     required: true,
   },
 });
 
-const frindesContainerSchema = new mongoose.Schema({
+const FriendsContainerSchema = new mongoose.Schema({
   userId: {
     type: String,
     required: true,
   },
-  frindes: {
-    type: [frindesSchema],
+  friends: {
+    type: [friendsSchema],
   },
   followers: {
-    type: [frindesSchema],
+    type: [friendsSchema],
   },
 });
 
-module.exports = mongoose.model("FrindesContainer", frindesContainerSchema);
+module.exports = mongoose.model("FriendsContainer", FriendsContainerSchema);

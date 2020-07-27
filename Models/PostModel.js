@@ -10,7 +10,7 @@ const responseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  responseAuthorPictur: {
+  responseAuthorPicture: {
     type: String,
     required: false,
   },
@@ -37,7 +37,7 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  postAuthorPictur: {
+  postAuthorPicture: {
     type: String,
     required: false,
   },

@@ -5,7 +5,7 @@ exports.creatPost = (req, res) => {
   // console.log(req.body);
   const post = new Posts({
     postAuthorId: req.body.UserId,
-    postAuthorPictur: req.body.UserProfilePictur,
+    postAuthorPicture: req.body.UserProfilePicture,
     postAuthorName: req.body.UserName,
     postImage: req.body.PostImage,
     postImageId: req.body.PostImageId,
@@ -30,7 +30,7 @@ exports.getLastPost = (req, res) => {
     .sort({ postDate: -1 })
     .limit(5)
     .select(
-      "_id postTitle nofLikes postDescription postImage postImageId postAuthorId postAuthorPictur postAuthorPictur postAuthorName postDate postResponses.length"
+      "_id postTitle nofLikes postDescription postImage postImageId postAuthorId postAuthorPicture postAuthorPicture postAuthorName postDate postResponses.length"
     )
     .then((allposts) => {
       if (allposts) {
@@ -51,7 +51,7 @@ exports.getSomePost = (req, res) => {
     .skip(Number(req.params.id))
     .limit(2)
     .select(
-      "_id postTitle nofLikes postDescription postImage postImageId postAuthorId postAuthorPictur postAuthorPictur postAuthorName postDate postResponses.length"
+      "_id postTitle nofLikes postDescription postImage postImageId postAuthorId postAuthorPicture postAuthorPicture postAuthorName postDate postResponses.length"
     )
     .then((allposts) => {
       if (allposts) {
@@ -69,7 +69,7 @@ exports.getSomePost = (req, res) => {
 exports.getAllMyPost = (req, res) => {
   Posts.find({ postAuthorId: req.params.id })
     .select(
-      "_id postTitle nofLikes postDescription postImage postImageId postAuthorId postAuthorPictur postAuthorPictur postAuthorName postDate postResponses.length"
+      "_id postTitle nofLikes postDescription postImage postImageId postAuthorId postAuthorPicture postAuthorPicture postAuthorName postDate postResponses.length"
     )
     .then((allposts) => {
       if (allposts) {
@@ -116,7 +116,7 @@ exports.addNewResponse = (req, res) => {
   var response = {
     authorId: req.body.AuthorId,
     responseAuthorName: req.body.ResponseAuthorName,
-    responseAuthorPictur: req.body.ResponseAuthorPictur,
+    responseAuthorPicture: req.body.ResponseAuthorPicture,
     response: req.body.Response,
     responseDate: req.body.ResponseDate,
   };
@@ -139,7 +139,6 @@ exports.getAllResponsesOfOnePost = (req, res) => {
   console.log(req.params.id);
   Posts.findOne({ _id: req.params.id })
     .select("postResponses")
-    // .exec()
     .then((allresponse) => {
       if (allresponse) {
         res.status(200).json({ allresponse: allresponse });
